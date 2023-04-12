@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    {% load bootstrap5  %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+ <nav>
+        <ul>
+            <li><a href="{% url 'telemedWebapp:home' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                {% if is_rehabilitator %}
+                    <li><a href="{% url 'telemedWebapp:view_particular_patients' %}">View all patients</a></li>
+                {% endif %}
+                <li><a href="{% url 'telemedWebapp:view_all_rehabilitators' %}">View all rehabilitators</a></li>
+                <li><a href="{% url 'telemedWebapp:my_account' %}">My account</a></li>
+                <li><a href="{% url 'telemedWebapp:logout_user' %}">Logout</a></li>
+            {% else %}
+                {% if not is_registration_page and not is_login_page %}
+                    <li><a href="{% url 'telemedWebapp:register_patient' %}">Register as patient</a></li>
+                    <li><a href="{% url 'telemedWebapp:register_rehabilitator' %}">Register as rehabilitator</a></li>
+                    <li><a href="{% url 'telemedWebapp:login_user' %}">Login</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+ </nav>
+
+<div class="container-fluid">
+    {% block content %}
+        {% if user.is_authenticated %}
+                <h2> Welcome, {{ user.username }}! </h2>
+        {% else %}
+                <h2> Welcome, please log in as a rehabilitator or patient! </h2>
+        {% endif %}
+    {% endblock %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-4jKZn2+Ex1+vJ4FgXAbpJkg+1qBImn31tSFWGaSsbT+xTChZaTjjp8PMc38kXflA"
+        crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
