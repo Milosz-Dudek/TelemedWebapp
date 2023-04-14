@@ -12,6 +12,6 @@ urlpatterns = [
     path('login/', views.login_user, name='login_user'),
     path('logout/', views.logout_user, name='logout_user'),
     path('my_account/', views.my_account_view, name='my_account'),
-    path('my_account/edit_rehabilitator/<int:pk>/', views.edit_rehabilitator, name='edit_rehabilitator'),
-    path('my_account/edit_patient/<int:pk>/', views.edit_patient, name='edit_patient')
+    path('my_account/edit_rehabilitator/', views.edit_rehabilitator, name='edit_rehabilitator'),
+    path('my_account/edit_patient/', views.edit_patient, name='edit_patient')
 ]

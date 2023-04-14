@@ -3,8 +3,8 @@
 {% block content %}
   <h1>My Account</h1>
     {% if is_rehabilitator %}
-        <a href="{% url 'telemedWebapp:edit_rehabilitator' profile.id %}" class="btn btn-primary">Edit Account</a>
+        <a href="{% url 'telemedWebapp:edit_rehabilitator' %}" class="btn btn-primary">Edit Account</a>
     {% else  %}
-        <a href="{% url 'telemedWebapp:edit_patient' profile.id %}" class="btn btn-primary">Edit Account</a>
+        <a href="{% url 'telemedWebapp:edit_patient' %}" class="btn btn-primary">Edit Account</a>
      {% endif %}
 {% endblock %}

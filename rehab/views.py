@@ -171,8 +171,8 @@ def my_account_view(request):
 
 
 @login_required
-def edit_rehabilitator(request, pk):
-    rehabilitator = get_object_or_404(Rehabilitator, pk=pk)
+def edit_rehabilitator(request):
+    rehabilitator = request.user.rehabilitator
     if request.method == 'POST':
         form = RehabilitatorRegisterForm(request.POST, instance=rehabilitator)
         if form.is_valid():
@@ -184,8 +184,8 @@ def edit_rehabilitator(request, pk):
 
 
 @login_required
-def edit_patient(request, pk):
-    patient = get_object_or_404(Patient, pk=pk)
+def edit_patient(request):
+    patient = request.user.patient
     if request.method == 'POST':
         form = PatientRegisterForm(request.POST, instance=patient)
         if form.is_valid():
