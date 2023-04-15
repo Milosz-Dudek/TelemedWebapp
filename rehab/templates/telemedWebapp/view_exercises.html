@@ -1,36 +1,35 @@
 {% extends 'telemedWebapp/base.html' %}
 
 {% block content %}
-  <h2>All Patients</h2>
-<div class="row mb-3">
+  <h2>All Exercises</h2>
+    <div class="row mb-3">
     <div class="col-md-3">
-        <form class="d-flex" method="GET">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-    </div>
+    <form class="d-flex" method="GET">
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+  </div>
 </div>
-{% if patients %}
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Sex</th>
-    </thead>
-    <tbody>
-      {% for patient in page_obj  %}
-        <tr>
-          <td>{{ patient.name }}</td>
-          <td>{{ patient.surname }}</td>
-          <td>{{ patient.sex }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
-    <p>No patients found.</p>
-{% endif %}
+
+    {% if exercises %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Type of exercise</th>
+            <th>Date</th>
+        </thead>
+        <tbody>
+          {% for exercise in page_obj  %}
+            <tr>
+              <td>{{ exercise.type_of_exercise }}</td>
+              <td>{{ exercise.date_of_exercise }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+        <p>No exercises found.</p>
+  {% endif %}
 <div class="d-flex justify-content-center">
   <nav aria-label="Page navigation example">
     <ul class="pagination">

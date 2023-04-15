@@ -41,3 +41,18 @@ class Patient(models.Model):
     def __str__(self):
         return self.name + " " + self.surname
 
+
+
+class Exercise(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='exercises')
+    type_of_exercise = models.CharField(max_length=15, choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')))
+    date_of_exercise = models.DateTimeField(null=True)
+
+
+class ExerciseData(models.Model):
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name='exercises_data')
+    time = models.FloatField()
+    seconds_elapsed = models.FloatField()
+    z = models.FloatField()
+    y = models.FloatField()
+    x = models.FloatField()

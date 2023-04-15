@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Adding our app
     'rehab.apps.RehabConfig',
-    'bootstrap5'
+    'bootstrap5',
+    'datetimewidget'
 ]
 
 MIDDLEWARE = [

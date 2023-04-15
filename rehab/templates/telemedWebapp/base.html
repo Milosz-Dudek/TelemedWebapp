@@ -16,6 +16,10 @@
                 {% if is_rehabilitator %}
                     <li><a href="{% url 'telemedWebapp:view_particular_patients' %}">View all patients</a></li>
                 {% endif %}
+                {% if is_patient %}
+                    <li><a href="{% url 'telemedWebapp:view_exercises' %}">View all made exercises</a></li>
+                    <li><a href="{% url 'telemedWebapp:add_exercise' %}">Add new exercise</a></li>
+                {% endif %}
                 <li><a href="{% url 'telemedWebapp:view_all_rehabilitators' %}">View all rehabilitators</a></li>
                 <li><a href="{% url 'telemedWebapp:my_account' %}">My account</a></li>
                 <li><a href="{% url 'telemedWebapp:logout_user' %}">Logout</a></li>

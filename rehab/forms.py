@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Rehabilitator, Patient
+from .models import Rehabilitator, Patient, Exercise, ExerciseData
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
@@ -62,3 +62,22 @@ class LoginForm(AuthenticationForm):
         model = User
         fields = ['username', 'password']
 
+
+class ExerciseForm(ModelForm):
+    type_of_exercise = forms.ChoiceField(choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')),
+                                         widget=forms.RadioSelect)
+    date_of_exercise = forms.DateTimeField()
+
+    class Meta:
+        model = Exercise
+        fields = ['type_of_exercise', 'date_of_exercise']
+        exclude = ['patient']
+
+
+class ExerciseDataForm(ModelForm):
+    exercise_data_file = forms.FileField()
+
+    class Meta:
+        model = ExerciseData
+        fields = ['time', 'seconds_elapsed', 'z', 'y', 'z']
+        exclude = ['exercise']

@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/', views.login_user, name='login_user'),
     path('logout/', views.logout_user, name='logout_user'),
     path('my_account/', views.my_account_view, name='my_account'),
-    path('my_account/edit_rehabilitator/', views.edit_rehabilitator, name='edit_rehabilitator'),
-    path('my_account/edit_patient/', views.edit_patient, name='edit_patient')
+    path('my_account/edit/', views.edit, name='edit'),
+    path('add_exercise/', views.add_exercise, name='add_exercise'),
+    path('view_exercises/', views.view_exercises, name='view_exercises')
 ]
