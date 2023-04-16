@@ -143,38 +143,64 @@ def view_all_rehabilitators(request):
     return render(request, 'telemedWebapp/view_all_rehabilitators.html', context)
 
 
+# @login_required
+# def view_particular_patients(request):
+#     user = request.user
+#     is_rehabilitator = True
+#     is_patient = False
+#
+#     if is_rehabilitator:
+#         profile = user.rehabilitator
+#         user = request.user
+#         rehabilitator = user.rehabilitator
+#         query = request.GET.get('q', '')
+#         patients = Patient.objects.filter(
+#             Q(name__icontains=query) |
+#             Q(surname__icontains=query) |
+#             Q(sex__icontains=query),
+#             rehabilitator=rehabilitator
+#         ).order_by('name', 'surname')
+#
+#         paginator = Paginator(patients, 10)  # 1 items per page
+#         page_number = request.GET.get('page')
+#         page_obj = paginator.get_page(page_number)
+#
+#         context = {'patients': patients,
+#                    'query': query,
+#                    'page_obj': page_obj,
+#                    'is_rehabilitator': is_rehabilitator,
+#                    'is_patient': is_patient}
+#
+#         # Pass the list of Rehabilitators to the template
+#         return render(request, 'telemedWebapp/view_particular_patients.html', context)
+#     return redirect('telemedWebapp:home')
+
+
 @login_required
 def view_particular_patients(request):
-    user = request.user
     is_rehabilitator = True
     is_patient = False
 
-    if is_rehabilitator:
-        profile = user.rehabilitator
-        user = request.user
-        rehabilitator = user.rehabilitator
-        query = request.GET.get('q', '')
-        patients = Patient.objects.filter(
-            Q(name__icontains=query) |
-            Q(surname__icontains=query) |
-            Q(sex__icontains=query),
-            rehabilitator=rehabilitator
-        ).order_by('name', 'surname')
+    current_rehabilitator = Rehabilitator.objects.get(user=request.user)
+    query = request.GET.get('q', '')
+    patients = Patient.objects.filter(
+        Q(name__icontains=query) |
+        Q(surname__icontains=query) |
+        Q(sex__icontains=query),
+        rehabilitator=current_rehabilitator
+    ).order_by('name', 'surname')
 
-        paginator = Paginator(patients, 10)  # 1 items per page
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
+    paginator = Paginator(patients, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-        context = {'patients': patients,
-                   'query': query,
-                   'page_obj': page_obj,
-                   'is_rehabilitator': is_rehabilitator,
-                   'is_patient': is_patient}
+    context = {'patients': patients,
+               'query': query,
+               'page_obj': page_obj,
+               'is_rehabilitator': is_rehabilitator,
+               'is_patient': is_patient}
 
-        # Pass the list of Rehabilitators to the template
-        return render(request, 'telemedWebapp/view_particular_patients.html', context)
-    return redirect('telemedWebapp:home')
-
+    return render(request, 'telemedWebapp/view_particular_patients.html', context)
 
 @login_required
 def my_account_view(request):
@@ -289,10 +315,27 @@ def add_exercise(request):
 
 @login_required
 def view_exercises(request):
-    is_rehabilitator = False
-    is_patient = True
+    user = request.user
+    is_rehabilitator = None
+    is_patient = None
+    patient = None
 
-    patient = request.user.patient
+    if hasattr(user, 'rehabilitator'):
+        is_rehabilitator = True
+        is_patient = False
+
+    elif hasattr(user, 'patient'):
+        print("patient")
+        is_rehabilitator = False
+        is_patient = True
+
+    if is_rehabilitator:
+        patient_id = request.GET.get('patient_id')
+        patient = Patient.objects.get(id=patient_id)
+
+    if is_patient:
+        patient = request.user.patient
+
     query = request.GET.get('q', '')
     exercises = Exercise.objects.filter(
         Q(date_of_exercise__icontains=query) |
@@ -312,3 +355,4 @@ def view_exercises(request):
 
     # Pass the list of Exercises to the template
     return render(request, 'telemedWebapp/view_exercises.html', context)
+

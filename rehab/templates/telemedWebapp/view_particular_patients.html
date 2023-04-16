@@ -11,26 +11,29 @@
     </div>
 </div>
 {% if patients %}
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Sex</th>
-    </thead>
-    <tbody>
-      {% for patient in page_obj  %}
+    <table class="table table-striped">
+      <thead>
         <tr>
-          <td>{{ patient.name }}</td>
-          <td>{{ patient.surname }}</td>
-          <td>{{ patient.sex }}</td>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Sex</th>
+          <th>Exercises</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-{% else %}
+      </thead>
+      <tbody>
+        {% for patient in page_obj %}
+          <tr>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.surname }}</td>
+            <td>{{ patient.sex }}</td>
+            <td><a href="{% url 'telemedWebapp:view_exercises' %}?patient_id={{ patient.id }}">View Exercises</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
     <p>No patients found.</p>
-{% endif %}
+  {% endif %}
 <div class="d-flex justify-content-center">
   <nav aria-label="Page navigation example">
     <ul class="pagination">
