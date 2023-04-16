@@ -45,8 +45,13 @@ class Patient(models.Model):
 
 class Exercise(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='exercises')
-    type_of_exercise = models.CharField(max_length=15, choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')))
+    type_of_exercise = models.CharField(max_length=15, choices=(('Sit-ups', 'Sit-ups'),
+                                                                ('Jumping-jacks', 'Jumping-jacks')))
     date_of_exercise = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return "Patient " + str(self.patient.id) + " of name " + self.patient + \
+            " made exercise of id number " + str(self.id)
 
 
 class ExerciseData(models.Model):
@@ -56,3 +61,6 @@ class ExerciseData(models.Model):
     z = models.FloatField()
     y = models.FloatField()
     x = models.FloatField()
+
+    def __str__(self):
+        return str(self.id)

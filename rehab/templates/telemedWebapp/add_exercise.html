@@ -2,9 +2,10 @@
 
 {% block content %}
   <h2>Add new exercise</h2>
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-        {{ form.as_p }}
+        {{ exercise_form.as_p }}
+        {{ exercise_data_form.as_p }}
     <button type="submit">Register</button>
   </form>
 {% endblock %}

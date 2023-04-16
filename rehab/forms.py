@@ -1,3 +1,6 @@
+import csv
+import io
+
 from django.forms import ModelForm
 from .models import Rehabilitator, Patient, Exercise, ExerciseData
 from django import forms
@@ -45,7 +48,8 @@ class PatientRegisterForm(ModelForm):
 
     class Meta:
         model = Patient
-        fields = ['name', 'surname', 'sex', 'birth_date', 'location', 'street', 'house_number', 'local_number', 'rehabilitator']
+        fields = ['name', 'surname', 'sex', 'birth_date', 'location', 'street',
+                  'house_number', 'local_number', 'rehabilitator']
 
     def clean_email(self):
         username = self.cleaned_data.get('username')
@@ -75,9 +79,29 @@ class ExerciseForm(ModelForm):
 
 
 class ExerciseDataForm(ModelForm):
-    exercise_data_file = forms.FileField()
+    csv_file = forms.FileField()
 
     class Meta:
         model = ExerciseData
-        fields = ['time', 'seconds_elapsed', 'z', 'y', 'z']
-        exclude = ['exercise']
+        fields = ('csv_file',)
+
+    def save(self, commit=True, exercise=None):
+        csv_file = self.cleaned_data.get('csv_file')
+        if csv_file:
+            # process the csv file and save the exercise data
+            reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
+            for row in reader:
+                exercise_data = ExerciseData(exercise=exercise,
+                                             time=row['time'],
+                                             seconds_elapsed=row['seconds_elapsed'],
+                                             z=row['z'],
+                                             y=row['y'],
+                                             x=row['x'])
+                exercise_data.save()
+        else:
+            raise ValueError('No CSV file provided')
+
+        if commit:
+            exercise.save()
+
+        return exercise

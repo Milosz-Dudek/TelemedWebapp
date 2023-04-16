@@ -1,17 +1,15 @@
-import csv
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm
-from .models import Rehabilitator, Patient, Exercise, ExerciseData
+from .models import Rehabilitator, Patient, Exercise
 
 
 def home_view(request):
@@ -143,39 +141,6 @@ def view_all_rehabilitators(request):
     return render(request, 'telemedWebapp/view_all_rehabilitators.html', context)
 
 
-# @login_required
-# def view_particular_patients(request):
-#     user = request.user
-#     is_rehabilitator = True
-#     is_patient = False
-#
-#     if is_rehabilitator:
-#         profile = user.rehabilitator
-#         user = request.user
-#         rehabilitator = user.rehabilitator
-#         query = request.GET.get('q', '')
-#         patients = Patient.objects.filter(
-#             Q(name__icontains=query) |
-#             Q(surname__icontains=query) |
-#             Q(sex__icontains=query),
-#             rehabilitator=rehabilitator
-#         ).order_by('name', 'surname')
-#
-#         paginator = Paginator(patients, 10)  # 1 items per page
-#         page_number = request.GET.get('page')
-#         page_obj = paginator.get_page(page_number)
-#
-#         context = {'patients': patients,
-#                    'query': query,
-#                    'page_obj': page_obj,
-#                    'is_rehabilitator': is_rehabilitator,
-#                    'is_patient': is_patient}
-#
-#         # Pass the list of Rehabilitators to the template
-#         return render(request, 'telemedWebapp/view_particular_patients.html', context)
-#     return redirect('telemedWebapp:home')
-
-
 @login_required
 def view_particular_patients(request):
     is_rehabilitator = True
@@ -201,6 +166,7 @@ def view_particular_patients(request):
                'is_patient': is_patient}
 
     return render(request, 'telemedWebapp/view_particular_patients.html', context)
+
 
 @login_required
 def my_account_view(request):
@@ -237,7 +203,6 @@ def edit(request):
         is_patient = False
 
     elif hasattr(user, 'patient'):
-        print("patient")
         is_rehabilitator = False
         is_patient = True
 
@@ -249,7 +214,6 @@ def edit(request):
                 return redirect('telemedWebapp:home')
         else:
             form = RehabilitatorRegisterForm(instance=user.rehabilitator)
-
 
         return render(request, 'telemedWebapp/edit.html', {'form': form,
                                                            'is_rehabilitator': is_rehabilitator,
@@ -269,48 +233,31 @@ def edit(request):
                                                            'is_patient': is_patient})
 
 
-@login_required
 def add_exercise(request):
     is_rehabilitator = False
     is_patient = True
+
     if request.method == 'POST':
-        form = ExerciseForm(request.POST)
-        if form.is_valid():
-            exercise_form = form.save(commit=False)
-            exercise_form.patient = request.user.patient
-            exercise_form.save()
+        exercise_form = ExerciseForm(request.POST)
+        exercise_data_form = ExerciseDataForm(request.POST, request.FILES)
+        if exercise_form.is_valid() and exercise_data_form.is_valid():
+            exercise = exercise_form.save(commit=False)
+            exercise.patient = request.user.patient
+            exercise.save()
+
+            exercise_data = exercise_data_form.save(commit=False, exercise=exercise)
+            exercise_data.save()
+
             return redirect('telemedWebapp:home')
     else:
-        form = ExerciseForm()
-    return render(request, 'telemedWebapp/add_exercise.html', {'form': form,
-                                                               'is_rehabilitator': is_rehabilitator,
-                                                               'is_patient': is_patient})
+        exercise_form = ExerciseForm()
+        exercise_data_form = ExerciseDataForm()
+    context = {'exercise_form': exercise_form,
+               'exercise_data_form': exercise_data_form,
+               'is_rehabilitator': is_rehabilitator,
+               'is_patient': is_patient}
 
-# @login_required
-# def add_exercise(request):
-#     is_rehabilitator = False
-#     is_patient = True
-#     if request.method == 'POST':
-#         exercise_form = ExerciseForm(request.POST, request.FILES)
-#         exercise_data_form = ExerciseDataForm(request.POST, request.FILES)
-#         if exercise_form.is_valid() and exercise_data_form.is_valid():
-#             exercise = exercise_form.save()
-#             exercise_data_file = request.FILES['exercise_data_file']
-#             reader = csv.reader(exercise_data_file)
-#             for row in reader:
-#                 exercise_data = ExerciseData(exercise=exercise, time=row[0], reps=row[1], weight=row[2])
-#                 exercise_data.save()
-#             return redirect('view_exercises')
-#     else:
-#         exercise_form = ExerciseForm()
-#         exercise_data_form = ExerciseDataForm()
-#
-#     context = {'exercise_form': exercise_form,
-#                'exercise_data_form': exercise_data_form,
-#                'is_rehabilitator': is_rehabilitator,
-#                'is_patient': is_patient}
-#
-#     return render(request, 'telemedWebapp/add_exercise.html', context)
+    return render(request, 'telemedWebapp/add_exercise.html', context)
 
 
 @login_required
@@ -325,7 +272,6 @@ def view_exercises(request):
         is_patient = False
 
     elif hasattr(user, 'patient'):
-        print("patient")
         is_rehabilitator = False
         is_patient = True
 
@@ -355,4 +301,3 @@ def view_exercises(request):
 
     # Pass the list of Exercises to the template
     return render(request, 'telemedWebapp/view_exercises.html', context)
-
