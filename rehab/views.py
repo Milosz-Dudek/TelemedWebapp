@@ -269,6 +269,28 @@ def add_exercise(request):
 
 
 @login_required
+def edit_exercise(request):
+    is_rehabilitator = False
+    is_patient = True
+
+    exercise_id = request.GET.get('exercise_id')
+    exercise = Exercise.objects.get(id=exercise_id)
+
+    if is_patient:
+        if request.method == 'POST':
+            exercise_form = ExerciseForm(request.POST, instance=exercise)
+            if exercise_form.is_valid():
+                exercise_form.save()
+                return redirect('telemedWebapp:home')
+        else:
+            exercise_form = ExerciseForm(instance=exercise)
+
+        return render(request, 'telemedWebapp/exercise_edit.html', {'exercise_form': exercise_form,
+                                                                    'is_rehabilitator': is_rehabilitator,
+                                                                    'is_patient': is_patient})
+
+
+@login_required
 def view_exercises(request):
     user = request.user
     is_rehabilitator = None
@@ -297,7 +319,6 @@ def view_exercises(request):
         patient=patient
     ).order_by('date_of_exercise', 'type_of_exercise')
 
-
     paginator = Paginator(exercises, 10)  # 10 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -309,8 +330,6 @@ def view_exercises(request):
                'is_patient': is_patient}
 
     return render(request, 'telemedWebapp/view_exercises.html', context)
-
-
 
 
 @login_required
@@ -339,7 +358,7 @@ def exercise_plot(request):
     y = y[500:-500]
     z = z[500:-500]
 
-    time = np.linspace(0, np.max(x)-np.min(x), x.shape[0])
+    time = np.linspace(0, np.max(x) - np.min(x), x.shape[0])
 
     z_peaks, _ = find_peaks(z, prominence=5, distance=100)
 
@@ -371,5 +390,3 @@ def exercise_plot(request):
     }
 
     return render(request, 'telemedWebapp/exercise_plot.html', context)
-
-
