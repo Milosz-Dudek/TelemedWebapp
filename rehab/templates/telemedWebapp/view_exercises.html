@@ -19,10 +19,11 @@
             <th>Date</th>
         </thead>
         <tbody>
-          {% for exercise in page_obj  %}
+          {% for exercise in page_obj %}
             <tr>
-              <td>{{ exercise.type_of_exercise }}</td>
-              <td>{{ exercise.date_of_exercise }}</td>
+                <td>{{ exercise.date_of_exercise }}</td>
+                <td>{{ exercise.type_of_exercise }}</td>
+                <td><a href="{% url 'telemedWebapp:exercise_plot' %}?exercise_id={{ exercise.id }}">View Exercises</a></td>
             </tr>
           {% endfor %}
         </tbody>

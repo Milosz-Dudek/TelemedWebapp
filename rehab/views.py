@@ -1,15 +1,23 @@
+import numpy as np
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator
+from matplotlib import pyplot as plt
+from io import BytesIO
+import base64
+
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from scipy.signal import find_peaks
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm
-from .models import Rehabilitator, Patient, Exercise
+from .models import Rehabilitator, Patient, Exercise, ExerciseData
 
 
 def home_view(request):
@@ -289,6 +297,7 @@ def view_exercises(request):
         patient=patient
     ).order_by('date_of_exercise', 'type_of_exercise')
 
+
     paginator = Paginator(exercises, 10)  # 10 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -299,5 +308,68 @@ def view_exercises(request):
                'is_rehabilitator': is_rehabilitator,
                'is_patient': is_patient}
 
-    # Pass the list of Exercises to the template
     return render(request, 'telemedWebapp/view_exercises.html', context)
+
+
+
+
+@login_required
+def exercise_plot(request):
+    user = request.user
+    is_rehabilitator = None
+    is_patient = None
+
+    if hasattr(user, 'rehabilitator'):
+        is_rehabilitator = True
+        is_patient = False
+
+    elif hasattr(user, 'patient'):
+        is_rehabilitator = False
+        is_patient = True
+
+    exercise_id = request.GET.get('exercise_id')
+    exercise = Exercise.objects.get(id=exercise_id)
+    exercise_data = ExerciseData.objects.filter(exercise=exercise)
+
+    x = np.array([data['x'] for data in exercise_data.values('x')])
+    y = np.array([data['y'] for data in exercise_data.values('y')])
+    z = np.array([data['z'] for data in exercise_data.values('z')])
+
+    x = x[500:-500]
+    y = y[500:-500]
+    z = z[500:-500]
+
+    time = np.linspace(0, np.max(x)-np.min(x), x.shape[0])
+
+    z_peaks, _ = find_peaks(z, prominence=5, distance=100)
+
+    y_peaks, _ = find_peaks(-y, prominence=30)
+
+    fig, axs = plt.subplots(3, 1, figsize=(12, 12))
+    axs[0].plot(time, x)
+    axs[0].set_title('X-axis')
+    axs[1].plot(time, y)
+    axs[1].set_title('Y-axis')
+    axs[1].set_ylabel('Acceleration [m/s$^{{\\mathregular{{2}}}}$]')
+    axs[2].plot(time, z)
+    axs[2].set_title('Z-axis')
+    axs[2].set_xlabel('Time [s]')
+    fig.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    plot_data = base64.b64encode(buffer.read()).decode('utf-8')
+
+    context = {
+        'exercise': exercise,
+        'plot_data': plot_data,
+        'is_rehabilitator': is_rehabilitator,
+        'is_patient': is_patient,
+        'sit_ups_count': z_peaks.shape[0],
+        'jumping_jacks_count': (y_peaks.shape[0] - 1) // 2,
+    }
+
+    return render(request, 'telemedWebapp/exercise_plot.html', context)
+
+

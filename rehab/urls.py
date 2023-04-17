@@ -14,5 +14,6 @@ urlpatterns = [
     path('my_account/', views.my_account_view, name='my_account'),
     path('my_account/edit/', views.edit, name='edit'),
     path('add_exercise/', views.add_exercise, name='add_exercise'),
-    path('view_exercises/', views.view_exercises, name='view_exercises')
+    path('view_exercises/', views.view_exercises, name='view_exercises'),
+    path('exercise_plot/', views.exercise_plot, name='exercise_plot')
 ]

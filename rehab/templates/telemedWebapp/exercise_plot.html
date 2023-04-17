@@ -1,0 +1,16 @@
+{% extends 'telemedWebapp/base.html' %}
+
+{% block content %}
+    {% if exercise.type_of_exercise == 'Sit-ups' %}
+        <h3>There were {{ sit_ups_count }} sit-ups!</h3>
+    {% endif %}
+
+    {% if exercise.type_of_exercise == 'Jumping-jacks' %}
+        <h3>There were {{ jumping_jacks_count }} jumping-jacks!</h3>
+    {% endif %}
+
+    {% if plot_data %}
+        <img src="data:image/png;base64, {{ plot_data }}" alt="Exercise Plot" />
+    {% endif %}
+
+{% endblock %}

@@ -50,8 +50,7 @@ class Exercise(models.Model):
     date_of_exercise = models.DateTimeField(null=True)
 
     def __str__(self):
-        return "Patient " + str(self.patient.id) + " of name " + self.patient + \
-            " made exercise of id number " + str(self.id)
+        return str(self.id)
 
 
 class ExerciseData(models.Model):
