@@ -290,6 +290,29 @@ def edit_exercise(request):
                                                                     'is_patient': is_patient})
 
 
+
+@login_required
+def delete_exercise(request):
+    is_rehabilitator = False
+    is_patient = True
+
+    exercise_id = request.GET.get('exercise_id')
+    exercise = Exercise.objects.get(id=exercise_id)
+    exercise_data = ExerciseData.objects.filter(exercise=exercise)
+
+    if request.method == 'POST':
+        if request.POST.get("confirm_delete"):
+            exercise_data.delete()
+            exercise.delete()
+            return redirect('telemedWebapp:view_exercises')
+        else:
+            return redirect('telemedWebapp:view_exercises')
+
+    return render(request, 'telemedWebapp/exercise_delete.html', {'exercise': exercise,
+                                                                  'is_rehabilitator': is_rehabilitator,
+                                                                  'is_patient': is_patient})
+
+
 @login_required
 def view_exercises(request):
     user = request.user

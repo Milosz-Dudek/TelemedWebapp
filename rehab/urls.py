@@ -15,6 +15,7 @@ urlpatterns = [
     path('my_account/edit/', views.edit, name='edit'),
     path('add_exercise/', views.add_exercise, name='add_exercise'),
     path('edit_exercise/', views.edit_exercise, name='edit_exercise'),
+    path('delete_exercise/', views.delete_exercise, name='delete_exercise'),
     path('view_exercises/', views.view_exercises, name='view_exercises'),
     path('exercise_plot/', views.exercise_plot, name='exercise_plot')
 ]

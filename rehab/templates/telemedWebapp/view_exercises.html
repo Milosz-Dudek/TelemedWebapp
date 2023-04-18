@@ -18,7 +18,10 @@
             <th>Type of exercise</th>
             <th>Date</th>
             <th>Exercise plot</th>
-            <th>Edit exercise</th>
+              {% if is_patient %}
+                <th>Edit exercise</th>
+                <th>Delete exercise</th>
+              {% endif %}
         </thead>
         <tbody>
           {% for exercise in page_obj %}
@@ -26,7 +29,10 @@
                 <td>{{ exercise.date_of_exercise }}</td>
                 <td>{{ exercise.type_of_exercise }}</td>
                 <td><a href="{% url 'telemedWebapp:exercise_plot' %}?exercise_id={{ exercise.id }}">View exercises</a></td>
-            <td><a href="{% url 'telemedWebapp:edit_exercise' %}?exercise_id={{ exercise.id }}">Edit exercise</a></td>
+                {% if is_patient %}
+                    <td><a href="{% url 'telemedWebapp:edit_exercise' %}?exercise_id={{ exercise.id }}">Edit exercise</a></td>
+                    <td><a href="{% url 'telemedWebapp:delete_exercise' %}?exercise_id={{ exercise.id }}">Delete exercise</a></td>
+                {% endif %}
             </tr>
           {% endfor %}
         </tbody>

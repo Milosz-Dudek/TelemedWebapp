@@ -1,0 +1,14 @@
+{% extends 'telemedWebapp/base.html' %}
+
+{% block content %}
+    <h2>Delete Exercise</h2>
+    <h3>Are you sure you want to delete the exercise?</h3>
+
+    <form method="POST" class="d-inline-block">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" name="confirm_delete" value="true">Yes, delete it</button>
+    </form>
+
+    <a href="{% url 'telemedWebapp:view_exercises' %}" class="btn btn-secondary ml-3">Cancel</a>
+
+{% endblock %}
