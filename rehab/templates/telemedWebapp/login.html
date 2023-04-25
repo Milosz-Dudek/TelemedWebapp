@@ -1,10 +1,27 @@
-{% extends 'telemedWebapp/base.html' %}
-
-{% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/login.png' %}">
+    <title>...::: Login :::...</title>
+</head>
+<body>
+<div id="log">
+    {% block content %}
+      <h2>Login</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+      </form>
+    {% endblock %}
+</div>
+<a href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
+</body>
+</html>

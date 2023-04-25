@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
@@ -13,7 +12,6 @@ from matplotlib import pyplot as plt
 from io import BytesIO
 import base64
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg
 from scipy.signal import find_peaks
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm
@@ -329,11 +327,24 @@ def view_exercises(request):
         is_patient = True
 
     if is_rehabilitator:
-        patient_id = request.GET.get('patient_id')
-        patient = Patient.objects.get(id=patient_id)
+        if 'patient_id' in request.GET:
+            patient_id = request.GET['patient_id']
+            try:
+                patient = Patient.objects.get(id=patient_id)
+                request.session['patient_id'] = patient_id
+            except Patient.DoesNotExist:
+                pass
+        elif 'patient_id' in request.session:
+            patient_id = request.session['patient_id']
+            try:
+                patient = Patient.objects.get(id=patient_id)
+            except Patient.DoesNotExist:
+                del request.session['patient_id']
+
 
     if is_patient:
         patient = request.user.patient
+        patient_id = patient.id
 
     query = request.GET.get('q', '')
     exercises = Exercise.objects.filter(
@@ -372,11 +383,12 @@ def exercise_plot(request):
     exercise_id = request.GET.get('exercise_id')
     exercise = Exercise.objects.get(id=exercise_id)
     exercise_data = ExerciseData.objects.filter(exercise=exercise)
-
+    print(exercise)
+    print(exercise_data)
     x = np.array([data['x'] for data in exercise_data.values('x')])
     y = np.array([data['y'] for data in exercise_data.values('y')])
     z = np.array([data['z'] for data in exercise_data.values('z')])
-
+    print(x)
     x = x[500:-500]
     y = y[500:-500]
     z = z[500:-500]
@@ -388,12 +400,12 @@ def exercise_plot(request):
     y_peaks, _ = find_peaks(-y, prominence=30)
 
     fig, axs = plt.subplots(3, 1, figsize=(12, 12))
-    axs[0].plot(time, x)
+    axs[0].plot(time, x, '-r')
     axs[0].set_title('X-axis')
-    axs[1].plot(time, y)
+    axs[1].plot(time, y, '-g')
     axs[1].set_title('Y-axis')
     axs[1].set_ylabel('Acceleration [m/s$^{{\\mathregular{{2}}}}$]')
-    axs[2].plot(time, z)
+    axs[2].plot(time, z, '-b')
     axs[2].set_title('Z-axis')
     axs[2].set_xlabel('Time [s]')
     fig.tight_layout()

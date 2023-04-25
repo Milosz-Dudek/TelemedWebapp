@@ -1,0 +1,87 @@
+#home{
+    text-decoration: none;
+    border: 2px solid white;
+    border-radius: 40px;
+    width: 284px;
+    height: 50px;
+    display: block;
+    margin: auto;
+    color: white;
+    background-color: rgb(134, 194, 50);
+    position: relative;
+    transition: 1s;
+}
+.bt_txt{
+    position: absolute;
+    top:14%;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-variant: small-caps;
+}
+table{
+    border: 1px solid white;
+    font-size: 22px;
+    text-align: center;
+    margin: auto;
+}
+th{
+    border: 1px solid white;
+    padding: 8px;
+    font-variant: small-caps;
+}
+td{
+    border: 1px solid white;
+    padding: 8px;
+}
+a{
+    text-decoration: none;
+    color:aquamarine;
+}
+.page-link{
+    font-size: 20px;
+    margin: auto;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border: 1px solid white;
+    border-radius: 15px;
+    display: block;
+    overflow: hidden;
+}
+.page-item{
+    display: inline-block;
+    margin: auto 2px auto 2px;
+    transition: 1s;
+    overflow: hidden;
+}
+.page-item:hover{
+    transform: rotate(360deg);
+}
+.pagination{
+    padding: 0;
+    text-align: center;
+}
+form{
+    text-align: center;
+    margin-bottom: 20px;
+}
+input[type='search']{
+    width: 200px;
+    height: 26px;
+}
+button{
+    width: 80px;
+    border-radius: 30px;
+    border: 1px solid white;
+    font-family: Mirza;
+    font-size: 18px;
+    background-color: rgb(134, 194, 50);
+    color: white;
+    cursor: pointer;
+}
+#home:hover{
+    border-radius: 0;
+    color: rgb(171, 14, 61);
+}

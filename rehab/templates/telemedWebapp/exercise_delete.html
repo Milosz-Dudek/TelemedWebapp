@@ -1,5 +1,17 @@
-{% extends 'telemedWebapp/base.html' %}
-
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/delete.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/edit.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/del.css' %}">
+    <title>...::: Delete exercise :::...</title>
+</head>
+<body>
 {% block content %}
     <h2>Delete Exercise</h2>
     <h3>Are you sure you want to delete the exercise?</h3>
@@ -12,3 +24,5 @@
     <a href="{% url 'telemedWebapp:view_exercises' %}" class="btn btn-secondary ml-3">Cancel</a>
 
 {% endblock %}
+</body>
+</html>

@@ -1,0 +1,18 @@
+#clock{
+    width: 204px;
+    font-size: 50px;
+    margin: auto;
+    height: 60px;
+}
+.time{
+    width: 60px;
+    float: left;
+    margin: auto;
+    text-align: center;
+}
+.dots{
+    float: left;
+    width: 12px;
+    height: 60px;
+    text-align: center;
+}

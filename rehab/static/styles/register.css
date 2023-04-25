@@ -1,0 +1,21 @@
+#cont{
+    width: 400px;
+    margin: auto;
+}
+input[type='text'], input[type='password']{
+    float: right;
+    width: 200px;
+    height: 20px;
+}
+label{
+    font-size: 20px;
+}
+select{
+    float: right;
+    width: 208px;
+}
+input[type='date']{
+    float: right;
+    width: 200px;
+    text-align: center;
+}

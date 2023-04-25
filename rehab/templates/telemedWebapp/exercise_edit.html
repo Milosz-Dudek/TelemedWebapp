@@ -1,13 +1,29 @@
-{% extends 'telemedWebapp/base.html' %}
-
-{% block content %}
-  <div class="container">
-    <h1>Edit Exercise</h1>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ exercise_form.as_p }}
-      <button type="submit" class="btn btn-primary">Save</button>
-      <a href="{% url 'telemedWebapp:home' %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/edit.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/add_exercise.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/edit.css' %}">
+    <title>...::: Edit :::...</title>
+</head>
+<body>
+<div id="cont">
+    {% block content %}
+      <div class="container">
+        <h2>Edit Exercise</h2>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ exercise_form.as_p }}
+          <button type="submit" class="btn btn-primary">Save</button>
+          <a href="{% url 'telemedWebapp:home' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+      </div>
+    {% endblock %}
+</div>
+</body>
+</html>

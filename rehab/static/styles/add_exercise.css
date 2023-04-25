@@ -1,0 +1,26 @@
+#cont{
+    width: 300px;
+    margin: auto;
+}
+input[type='date'] {
+    width: 150px;
+    float: right;
+    height: 20px;
+}
+label{
+    font-size: 20px;
+}
+input[type='file']{
+    font-family: Mirza;
+    font-size: 20px;
+}
+input[type='file']::file-selector-button{
+    width: 150px;
+    font-family: Mirza;
+    border: 2px solid white;
+    border-radius: 75px;
+    margin-top: 10px;
+    background-color: rgb(134, 194, 50);
+    color: white;
+    cursor: pointer;
+}

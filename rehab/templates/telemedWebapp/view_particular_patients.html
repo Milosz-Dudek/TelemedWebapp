@@ -1,5 +1,15 @@
-{% extends 'telemedWebapp/base.html' %}
-
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/patients.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/paginator.css' %}">
+    <title>Patients</title>
+</head>
+<body>
 {% block content %}
   <h2>All Patients</h2>
 <div class="row mb-3">
@@ -62,5 +72,9 @@
   </nav>
 </div>
 {% endblock %}
-
+<a id="home" href="{% url 'telemedWebapp:view_particular_patients' %}"><p class="bt_txt">Patients</p></a>
+<h1></h1>
+<a id="home" href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
+</body>
+</html>
 

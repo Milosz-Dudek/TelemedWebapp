@@ -1,11 +1,28 @@
-{% extends 'telemedWebapp/base.html' %}
-
-{% block content %}
-  <h2>Add new exercise</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-        {{ exercise_form.as_p }}
-        {{ exercise_data_form.as_p }}
-    <button type="submit">Register</button>
-  </form>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/add_exercise.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/add.png' %}">
+    <title>...::: Add exercise :::...</title>
+</head>
+<body>
+<div id="cont">
+    {% block content %}
+      <h2>Add new exercise</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            {{ exercise_form.as_p }}
+            {{ exercise_data_form.as_p }}
+        <button type="submit">Register</button>
+      </form>
+    {% endblock %}
+    <a href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
+</div>
+</body>
+</html>

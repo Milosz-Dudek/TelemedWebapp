@@ -38,7 +38,7 @@ class PatientRegisterForm(ModelForm):
     name = forms.CharField(max_length=30)
     surname = forms.CharField(max_length=30)
     sex = forms.ChoiceField(choices=(('M', 'Male'), ('F', 'Female')), widget=forms.RadioSelect)
-    birth_date = forms.DateTimeField()
+    birth_date = forms.DateTimeField(widget=forms.TextInput(attrs={'class': 'form-control', 'type':'date'}))
     location = forms.CharField(max_length=30)
     street = forms.CharField(max_length=50)
     house_number = forms.CharField(max_length=10)
@@ -70,7 +70,9 @@ class LoginForm(AuthenticationForm):
 class ExerciseForm(ModelForm):
     type_of_exercise = forms.ChoiceField(choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')),
                                          widget=forms.RadioSelect)
-    date_of_exercise = forms.DateTimeField()
+    date_of_exercise = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'})
+    )
 
     class Meta:
         model = Exercise

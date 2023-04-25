@@ -1,0 +1,17 @@
+@font-face {
+    font-family: Mirza;
+    src: url(../fonts/Mirza/Mirza-Regular.ttf);
+}
+html, body{
+    width: 100%;
+    height: 100%;
+    background-color: rgb(34, 38, 41);
+    font-family: Mirza;
+    color: white;
+    margin: 0;
+}
+h2{
+    text-align: center;
+    font-size: 32px;
+    text-shadow: 3px 3px #737373;
+}

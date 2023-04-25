@@ -1,0 +1,20 @@
+a.btn.btn-secondary:hover{
+    border-radius: 0;
+    color: rgb(171, 14, 61);
+}
+a.btn.btn-secondary{
+    width: 284px;
+    text-decoration: none;
+    border: 2px solid white;
+    border-radius: 40px;
+    height: 45px;
+    text-align: center;
+    margin: auto auto 15px auto;
+    font-size: 28px;
+    font-variant: small-caps;
+    padding-top: 5px;
+    color: white;
+    transition: 1s;
+    background-color: rgb(134, 194, 50);
+    display: block;
+}

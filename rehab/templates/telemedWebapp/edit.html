@@ -1,10 +1,26 @@
-{% extends 'telemedWebapp/base.html' %}
-
-{% block content %}
-  <h1>Edit Information</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Changes</button>
-  </form>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static '/icons/settings.png' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/buttons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/register.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <title>...::: My Account :::...</title>
+</head>
+<body>
+<div id="cont">
+    {% block content %}
+      <h2>Edit Information</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+      </form>
+    {% endblock %}
+</div>
+</body>
+</html>
