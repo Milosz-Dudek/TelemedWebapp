@@ -1,4 +1,6 @@
 import numpy as np
+import seaborn as sns
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -8,14 +10,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.core.paginator import Paginator
-from matplotlib import pyplot as plt
 from io import BytesIO
-import base64
-
+from matplotlib.backends.backend_svg import FigureCanvasSVG
+from matplotlib.figure import Figure
 from scipy.signal import find_peaks
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm
 from .models import Rehabilitator, Patient, Exercise, ExerciseData
+
+sns.set_theme()
 
 
 def home_view(request):
@@ -174,6 +177,37 @@ def view_particular_patients(request):
     return render(request, 'telemedWebapp/view_particular_patients.html', context)
 
 
+# @login_required
+# def view_particular_patients(request):
+#     is_rehabilitator = True
+#     is_patient = False
+#
+#     current_rehabilitator = Rehabilitator.objects.get(user=request.user)
+#     patients = Patient.objects.filter(
+#         rehabilitator=current_rehabilitator
+#     )
+#     form = PatientFilterForm(request.GET)
+#
+#     if form.is_valid():
+#         if form.cleaned_data['name']:
+#             patients = patients.filter(name__icontains=form.cleaned_data['name'])
+#         if form.cleaned_data['surname']:
+#             patients = patients.filter(surname__icontains=form.cleaned_data['surname'])
+#         if form.cleaned_data['sex']:
+#             patients = patients.filter(sex=form.cleaned_data['sex'])
+#
+#     paginator = Paginator(patients, 2)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#
+#     context = {'patients': patients,
+#                'form': form,
+#                'page_obj': page_obj,
+#                'is_rehabilitator': is_rehabilitator,
+#                'is_patient': is_patient}
+#
+#     return render(request, 'telemedWebapp/view_particular_patients.html', context)
+
 @login_required
 def my_account_view(request):
     user = request.user
@@ -288,7 +322,6 @@ def edit_exercise(request):
                                                                     'is_patient': is_patient})
 
 
-
 @login_required
 def delete_exercise(request):
     is_rehabilitator = False
@@ -341,7 +374,6 @@ def view_exercises(request):
             except Patient.DoesNotExist:
                 del request.session['patient_id']
 
-
     if is_patient:
         patient = request.user.patient
         patient_id = patient.id
@@ -383,12 +415,9 @@ def exercise_plot(request):
     exercise_id = request.GET.get('exercise_id')
     exercise = Exercise.objects.get(id=exercise_id)
     exercise_data = ExerciseData.objects.filter(exercise=exercise)
-    print(exercise)
-    print(exercise_data)
     x = np.array([data['x'] for data in exercise_data.values('x')])
     y = np.array([data['y'] for data in exercise_data.values('y')])
     z = np.array([data['z'] for data in exercise_data.values('z')])
-    print(x)
     x = x[500:-500]
     y = y[500:-500]
     z = z[500:-500]
@@ -399,7 +428,9 @@ def exercise_plot(request):
 
     y_peaks, _ = find_peaks(-y, prominence=30)
 
-    fig, axs = plt.subplots(3, 1, figsize=(12, 12))
+    fig = Figure(figsize=(12, 12), dpi=72)
+    axs = fig.subplots(3, 1)
+
     axs[0].plot(time, x, '-r')
     axs[0].set_title('X-axis')
     axs[1].plot(time, y, '-g')
@@ -411,9 +442,10 @@ def exercise_plot(request):
     fig.tight_layout()
 
     buffer = BytesIO()
-    plt.savefig(buffer, format='png')
-    buffer.seek(0)
-    plot_data = base64.b64encode(buffer.read()).decode('utf-8')
+    canvas = FigureCanvasSVG(fig)
+    canvas.print_figure(buffer)
+
+    plot_data = buffer.getvalue().decode(settings.DEFAULT_CHARSET)
 
     context = {
         'exercise': exercise,

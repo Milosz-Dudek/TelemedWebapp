@@ -1,6 +1,7 @@
 import csv
 import io
 
+from django.db import transaction
 from django.forms import ModelForm
 from .models import Rehabilitator, Patient, Exercise, ExerciseData
 from django import forms
@@ -61,6 +62,31 @@ class PatientRegisterForm(ModelForm):
         return email
 
 
+# class PatientFilterForm(forms.Form):
+#     name = forms.CharField(required=False)
+#     surname = forms.CharField(required=False)
+#     sex = forms.ChoiceField(choices=[('', 'Any'), ('M', 'Male'), ('F', 'Female')], required=False)
+#
+#     def filter_queryset(self, queryset):
+#         name = self.cleaned_data['name']
+#         surname = self.cleaned_data['surname']
+#         sex = self.cleaned_data['sex']
+#
+#         if name:
+#             queryset = queryset.filter(name__icontains=name)
+#         if surname:
+#             queryset = queryset.filter(surname__icontains=surname)
+#         if sex:
+#             queryset = queryset.filter(sex=sex)
+#
+#         return queryset.order_by('surname', 'name')
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        surname = cleaned_data.get('surname')
+        sex = cleaned_data.get('sex')
+
 class LoginForm(AuthenticationForm):
     class Meta:
         model = User
@@ -87,11 +113,13 @@ class ExerciseDataForm(ModelForm):
         model = ExerciseData
         fields = ('csv_file',)
 
+    @transaction.atomic
     def save(self, commit=True, exercise=None):
         csv_file = self.cleaned_data.get('csv_file')
         if csv_file:
             # process the csv file and save the exercise data
             reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
+            exercise_data_list = []
             for row in reader:
                 exercise_data = ExerciseData(exercise=exercise,
                                              time=row['time'],
@@ -99,11 +127,19 @@ class ExerciseDataForm(ModelForm):
                                              z=row['z'],
                                              y=row['y'],
                                              x=row['x'])
-                exercise_data.save()
+                exercise_data_list.append(exercise_data)
+
+            # Use bulk_create to create ExerciseData instances in bulk
+            ExerciseData.objects.bulk_create(exercise_data_list)
+
+            if commit:
+                exercise.save()
+
         else:
             raise ValueError('No CSV file provided')
 
-        if commit:
-            exercise.save()
-
         return exercise
+
+
+
+

@@ -22,7 +22,11 @@
         {% endif %}
 
         {% if plot_data %}
-            <img src="data:image/png;base64, {{ plot_data }}" alt="Exercise Plot" />
+            <div class="text-center">
+                {{ plot_data|safe }}
+            </div>
+        {% else %}
+            <p>No data available for this exercise.</p>
         {% endif %}
 
     {% endblock %}
