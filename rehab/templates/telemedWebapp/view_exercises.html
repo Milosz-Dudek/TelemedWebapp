@@ -1,3 +1,4 @@
+{% load my_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -14,9 +15,11 @@
   <h2>All Exercises</h2>
     <div class="row mb-3">
     <div class="col-md-3">
-    <form class="d-flex" method="GET">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
-      <button class="btn btn-outline-success" type="submit">Search</button>
+     <h3>Filter the fields</h3>
+    <form>
+        {{ exercise_filter_form.as_p }}
+        <button type="submit">Search</button>
+        <button type="reset">Clear</button>
     </form>
   </div>
 </div>
@@ -49,37 +52,27 @@
     {% else %}
         <p>No exercises found.</p>
   {% endif %}
-<div class="d-flex justify-content-center">
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      {% if page_obj.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      {% endif %}
-      {% for num in page_obj.paginator.page_range %}
-      {% if page_obj.number == num %}
-      <li class="page-item active" aria-current="page"><a class="page-link" href="#">{{ num }}</a></li>
-      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-      <li class="page-item"><a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
-      {% endif %}
-      {% endfor %}
-      {% if page_obj.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-      {% endif %}
-    </ul>
-  </nav>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?{% param_replace page=1 %}">&laquo; First</a>
+            <a href="?{% param_replace page=page_obj.previous_page_number  %}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} out of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?{% param_replace page=page_obj.next_page_number  %}">Next</a>
+            <a href="?{% param_replace page=page_obj.paginator.num_pages  %}">Last &raquo;</a>
+        {% endif %}
+    </span>
 </div>
 {% endblock %}
-<a id="home" href="{% url 'telemedWebapp:view_exercises' %}"><p class="bt_txt">Exercises</p></a>
+<a id="home" href="{% url 'telemedWebapp:view_exercises' %}"><p class="bt_txt">Reset filtering</p></a>
 <h1></h1>
-<a id="home" href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
+<a id="home" href="{% url 'telemedWebapp:view_particular_patients' %}"><p class="bt_txt">Back to patients</p></a>
 </body>
 </html>
 

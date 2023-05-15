@@ -35,11 +35,19 @@ class RehabilitatorRegisterForm(ModelForm):
         return email
 
 
+class RehabilitatorFilterForm(forms.Form):
+    name = forms.CharField(label='name', required=False)
+    surname = forms.CharField(label='surname', required=False)
+    expertise = forms.CharField(label='expertise', required=False)
+    location = forms.CharField(label='location', required=False)
+    entity_name = forms.CharField(label='entity_name', required=False)
+
+
 class PatientRegisterForm(ModelForm):
     name = forms.CharField(max_length=30)
     surname = forms.CharField(max_length=30)
     sex = forms.ChoiceField(choices=(('M', 'Male'), ('F', 'Female')), widget=forms.RadioSelect)
-    birth_date = forms.DateTimeField(widget=forms.TextInput(attrs={'class': 'form-control', 'type':'date'}))
+    birth_date = forms.DateTimeField(widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}))
     location = forms.CharField(max_length=30)
     street = forms.CharField(max_length=50)
     house_number = forms.CharField(max_length=10)
@@ -61,31 +69,24 @@ class PatientRegisterForm(ModelForm):
                 'This email address is already in use. Please supply a different email address.')
         return email
 
-
-# class PatientFilterForm(forms.Form):
-#     name = forms.CharField(required=False)
-#     surname = forms.CharField(required=False)
-#     sex = forms.ChoiceField(choices=[('', 'Any'), ('M', 'Male'), ('F', 'Female')], required=False)
-#
-#     def filter_queryset(self, queryset):
-#         name = self.cleaned_data['name']
-#         surname = self.cleaned_data['surname']
-#         sex = self.cleaned_data['sex']
-#
-#         if name:
-#             queryset = queryset.filter(name__icontains=name)
-#         if surname:
-#             queryset = queryset.filter(surname__icontains=surname)
-#         if sex:
-#             queryset = queryset.filter(sex=sex)
-#
-#         return queryset.order_by('surname', 'name')
-
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')
         surname = cleaned_data.get('surname')
         sex = cleaned_data.get('sex')
+
+
+class PatientFilterForm(forms.Form):
+    name = forms.CharField(label='name', required=False)
+    surname = forms.CharField(label='surname', required=False)
+    sex = forms.ChoiceField(label='sex', choices=[('', 'Any'), ('M', 'Male'), ('F', 'Female')], required=False)
+    birth_date_from = forms.DateTimeField(label='birth_date_from',
+                                          widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}),
+                                          required=False)
+    birth_date_till = forms.DateTimeField(label='birth_date_till',
+                                          widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}),
+                                          required=False)
+
 
 class LoginForm(AuthenticationForm):
     class Meta:
@@ -104,6 +105,22 @@ class ExerciseForm(ModelForm):
         model = Exercise
         fields = ['type_of_exercise', 'date_of_exercise']
         exclude = ['patient']
+
+
+class ExerciseFilterForm(forms.Form):
+    type_of_exercise = forms.ChoiceField(label='type_of_exercise',
+                                         choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')),
+                                         widget=forms.RadioSelect, required=False)
+    date_of_exercise_from = forms.DateTimeField(label="date_of_exercise",
+                                                widget=forms.DateTimeInput(
+                                                    attrs={'class': 'form-control', 'type': 'datetime-local'}),
+                                                required=False
+                                                )
+    date_of_exercise_till = forms.DateTimeField(label="date_of_exercise",
+                                                widget=forms.DateTimeInput(
+                                                    attrs={'class': 'form-control', 'type': 'datetime-local'}),
+                                                required=False
+                                                )
 
 
 class ExerciseDataForm(ModelForm):
@@ -139,7 +156,3 @@ class ExerciseDataForm(ModelForm):
             raise ValueError('No CSV file provided')
 
         return exercise
-
-
-
-

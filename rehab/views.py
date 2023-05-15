@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.urls import reverse
@@ -15,7 +14,8 @@ from matplotlib.backends.backend_svg import FigureCanvasSVG
 from matplotlib.figure import Figure
 from scipy.signal import find_peaks
 
-from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm
+from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm, \
+    ExerciseFilterForm, PatientFilterForm, RehabilitatorFilterForm
 from .models import Rehabilitator, Patient, Exercise, ExerciseData
 
 sns.set_theme()
@@ -126,22 +126,29 @@ def view_all_rehabilitators(request):
     else:
         return redirect('telemedWebapp:home')
 
-    query = request.GET.get('q', '')
-    if query:
-        rehabilitators = Rehabilitator.objects.filter(
-            Q(name__icontains=query) |
-            Q(surname__icontains=query) |
-            Q(expertise__icontains=query)
-        ).order_by('expertise', 'name', 'surname')
-    else:
-        rehabilitators = Rehabilitator.objects.all().order_by('expertise', 'name', 'surname')
 
-    paginator = Paginator(rehabilitators, 10)  # 1 items per page
+    rehabilitators = Rehabilitator.objects.all().order_by('expertise', 'name', 'surname')
+
+    rehabilitator_filter_form = RehabilitatorFilterForm(request.GET)
+    if rehabilitator_filter_form.is_valid():
+        cd = rehabilitator_filter_form.cleaned_data
+        if cd['name']:
+            rehabilitators = rehabilitators.filter(name=cd['name'])
+        elif cd['surname']:
+            rehabilitators = rehabilitators.filter(surname=cd['surname'])
+        elif cd['expertise']:
+            rehabilitators = rehabilitators.filter(expertise=cd['expertise'])
+        elif cd['location']:
+            rehabilitators = rehabilitators.filter(location=cd['location'])
+        elif cd['entity_name']:
+            rehabilitators = rehabilitators.filter(entity_name=cd['entity_name'])
+
+    paginator = Paginator(rehabilitators, 10)  # 10 items per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {'rehabilitators': rehabilitators,
-               'query': query,
+               'rehabilitator_filter_form': rehabilitator_filter_form,
                'page_obj': page_obj,
                'is_rehabilitator': is_rehabilitator,
                'is_patient': is_patient}
@@ -150,63 +157,41 @@ def view_all_rehabilitators(request):
     return render(request, 'telemedWebapp/view_all_rehabilitators.html', context)
 
 
+
 @login_required
 def view_particular_patients(request):
     is_rehabilitator = True
     is_patient = False
 
     current_rehabilitator = Rehabilitator.objects.get(user=request.user)
-    query = request.GET.get('q', '')
-    patients = Patient.objects.filter(
-        Q(name__icontains=query) |
-        Q(surname__icontains=query) |
-        Q(sex__icontains=query),
-        rehabilitator=current_rehabilitator
-    ).order_by('name', 'surname')
+    patients = Patient.objects.filter(rehabilitator=current_rehabilitator).order_by('name', 'surname')
 
+    # User submitted the form, process form data and update session variables
+    patient_filter_form = PatientFilterForm(request.GET)
+    if patient_filter_form.is_valid():
+        cd = patient_filter_form.cleaned_data
+        if cd['name']:
+            patients = patients.filter(name=cd['name'])
+        elif cd['surname']:
+            patients = patients.filter(surname=cd['surname'])
+        elif cd['sex']:
+            patients = patients.filter(sex=cd['sex'])
+        elif cd['birth_date_from'] and cd['birth_date_till']:
+            patients = patients.filter(birth_date__range=(cd['birth_date_from'], cd['birth_date_till']))
+
+    # Create the paginator using the filtered queryset
     paginator = Paginator(patients, 10)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
     context = {'patients': patients,
-               'query': query,
+               'patient_filter_form': patient_filter_form,
                'page_obj': page_obj,
                'is_rehabilitator': is_rehabilitator,
                'is_patient': is_patient}
 
     return render(request, 'telemedWebapp/view_particular_patients.html', context)
 
-
-# @login_required
-# def view_particular_patients(request):
-#     is_rehabilitator = True
-#     is_patient = False
-#
-#     current_rehabilitator = Rehabilitator.objects.get(user=request.user)
-#     patients = Patient.objects.filter(
-#         rehabilitator=current_rehabilitator
-#     )
-#     form = PatientFilterForm(request.GET)
-#
-#     if form.is_valid():
-#         if form.cleaned_data['name']:
-#             patients = patients.filter(name__icontains=form.cleaned_data['name'])
-#         if form.cleaned_data['surname']:
-#             patients = patients.filter(surname__icontains=form.cleaned_data['surname'])
-#         if form.cleaned_data['sex']:
-#             patients = patients.filter(sex=form.cleaned_data['sex'])
-#
-#     paginator = Paginator(patients, 2)
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-#
-#     context = {'patients': patients,
-#                'form': form,
-#                'page_obj': page_obj,
-#                'is_rehabilitator': is_rehabilitator,
-#                'is_patient': is_patient}
-#
-#     return render(request, 'telemedWebapp/view_particular_patients.html', context)
 
 @login_required
 def my_account_view(request):
@@ -378,19 +363,23 @@ def view_exercises(request):
         patient = request.user.patient
         patient_id = patient.id
 
-    query = request.GET.get('q', '')
-    exercises = Exercise.objects.filter(
-        Q(date_of_exercise__icontains=query) |
-        Q(type_of_exercise__icontains=query),
-        patient=patient
-    ).order_by('date_of_exercise', 'type_of_exercise')
+    exercises = Exercise.objects.filter(patient=patient).order_by('date_of_exercise', 'type_of_exercise')
+
+    exercise_filter_form = ExerciseFilterForm(request.GET)
+    if exercise_filter_form.is_valid():
+        cd = exercise_filter_form.cleaned_data
+        if cd['type_of_exercise']:
+            exercises = exercises.filter(type_of_exercise=cd['type_of_exercise'])
+        elif cd['date_of_exercise_from'] and cd['date_of_exercise_till']:
+            exercises = exercises.filter(
+                date_of_exercise__range=(cd['date_of_exercise_from'], cd['date_of_exercise_till']))
 
     paginator = Paginator(exercises, 10)  # 10 items per page
-    page_number = request.GET.get('page')
+    page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
-    context = {'exercises': exercises,
-               'query': query,
+    context = {'exercise_filter_form': exercise_filter_form,
+               'exercises': exercises,
                'page_obj': page_obj,
                'is_rehabilitator': is_rehabilitator,
                'is_patient': is_patient}
