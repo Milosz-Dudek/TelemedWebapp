@@ -3,6 +3,7 @@
     font-size: 50px;
     margin: auto;
     height: 60px;
+    text-shadow: 3px 3px #737373;
 }
 .time{
     width: 60px;

@@ -1,7 +1,8 @@
 import random
-import string
+
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+
 from rehab.models import Rehabilitator
 
 female_names = ['Anna', 'Maria', 'Katarzyna', 'Małgorzata', 'Agnieszka', 'Krystyna', 'Barbara', 'Ewa', 'Elżbieta',

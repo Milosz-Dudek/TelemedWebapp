@@ -9,9 +9,36 @@ html, body{
     font-family: Mirza;
     color: white;
     margin: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-image: url("../imgs/main2.jpg");
 }
 h2{
     text-align: center;
-    font-size: 32px;
+    font-size: 40px;
     text-shadow: 3px 3px #737373;
+    margin-top: 0;
+    padding-top: 20px;
+}
+.ripple{
+    position: absolute;
+    background: #FFF;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    border-radius: 50%;
+    animation: animate 1s linear infinite;
+}
+@keyframes animate{
+    0%{
+        width: 0px;
+        height: 0px;
+        opacity: 0.5;
+    }
+    100%{
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+    }
 }

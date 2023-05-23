@@ -12,12 +12,13 @@
     <title>...::: Main Site :::...</title>
 </head>
 <body>
+<div id="cont">
 <div class="container-fluid">
     {% block content %}
         {% if user.is_authenticated %}
                 <h2> Welcome, {{ user.username }}! </h2>
         {% else %}
-                <h2> Welcome, please log in as a rehabilitator or patient! </h2>
+                <h2> Welcome, please log in! </h2>
         {% endif %}
     {% endblock %}
 </div>
@@ -40,11 +41,12 @@
             {% endif %}
             <li><a href="{% url 'telemedWebapp:view_all_rehabilitators' %}"><p class="bt_txt">View all rehabilitators</p></a></li>
             <li><a href="{% url 'telemedWebapp:my_account' %}"><p class="bt_txt">My account</p></a></li>
+            <li><a href="https://kutypix.github.io/games/minesweeper.html" target="_blank"><p class="bt_txt">Minesweeper</p></a></li>
             <li><a href="{% url 'telemedWebapp:logout_user' %}"><p class="bt_txt">Logout</p></a></li>
         {% else %}
             {% if not is_registration_page and not is_login_page %}
                 <li><a href="{% url 'telemedWebapp:register_patient' %}"><p class="bt_txt">Register as patient</p></a></li>
-                <li><a href="{% url 'telemedWebapp:register_rehabilitator' %}"><p class="bt_txt">Register as rehabilitator</p></a></li>
+                <li><a href="{% url 'telemedWebapp:register_rehabilitator' %}" ><p class="bt_txt">Register as rehabilitator</p></a></li>
                 <li><a href="{% url 'telemedWebapp:login_user' %}"><p class="bt_txt">Login</p></a></li>
             {% endif %}
         {% endif %}
@@ -59,5 +61,9 @@
         crossorigin="anonymous"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static '/scripts/padding.js' %}"></script>
+<script src="{% static '/scripts/click.js' %}"></script>
+<script src="{% static '/scripts/settings.js' %}"></script>
+</div>
 </body>
 </html>

@@ -9,15 +9,88 @@
     <link rel="stylesheet" type="text/css" href="{% static '/styles/buttons.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/styles/my_account.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/styles/bt.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/settings.css' %}">
     <title>...::: My Account :::...</title>
 </head>
 <body>
 
+<div id="imgs">
+    <div id="content">
+        <h2>Background Settings</h2>
+        <div id="action">
+            <div class="motive" style="background-image: url({% static '/imgs/main1.jpg' %})"></div>
+            <div class="motive" style="background-image: url({% static '/imgs/main2.jpg' %})"></div>
+            <div class="motive" style="background-image: url({% static '/imgs/main3.jpg' %})"></div>
+            <div class="motive" style="background-image: url({% static '/imgs/main4.jpg' %})"></div>
+            <div class="motive" style="background-image: url({% static '/imgs/main5.jpg' %})"></div>
+        </div>
+        <div id="back" class="set"><p class="bt_txt">Back</p></div>
+    </div>
+</div>
+
+<div id="cont">
 {% block content %}
   <h2>My Account</h2>
     <a href="{% url 'telemedWebapp:edit' %}" class="btn btn-primary"><p class="bt_txt">Edit Account</p></a>
 {% endblock %}
-
+<div id="set_bt" class="set"><p class="bt_txt">Settings</p></div>
 <a href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
+</div>
+
 </body>
+<script src="{% static '/scripts/padding.js' %}"></script>
+<script>
+        const set_bt = document.getElementById('set_bt')
+        const imgs = document.getElementById('imgs')
+        const back = document.getElementById('back')
+        const win = document.getElementById('content')
+        const motives = document.querySelectorAll('.motive')
+
+        win.style.top = window.innerHeight/4 + 'px'
+        win.style.left = window.innerWidth/2 - 301 + 'px'
+
+        set_bt.addEventListener('click',function(){
+            imgs.style.display = 'block'
+        })
+        back.addEventListener('click',function(){
+            imgs.style.display = 'none'
+        })
+
+        //const themes = ['main1.jpg','main2.jpg','main3.jpg','main4.jpg','main5.jpg']
+        function col_change(item, index){
+            item.addEventListener("click", function(){
+                switch(index){
+                    case(0):{
+                        document.body.style.backgroundImage = "url({% static '/imgs/main1.jpg' %})"
+                        localStorage.setItem('bgImg', "url({% static '/imgs/main1.jpg' %})")
+                        break
+                    }
+                    case(1):{
+                        document.body.style.backgroundImage = "url({% static '/imgs/main2.jpg' %})"
+                        localStorage.setItem('bgImg', "url({% static '/imgs/main2.jpg' %})")
+                        break
+                    }
+                    case(2):{
+                        document.body.style.backgroundImage = "url({% static '/imgs/main3.jpg' %})"
+                        localStorage.setItem('bgImg', "url({% static '/imgs/main3.jpg' %})")
+                        break
+                    }
+                    case(3):{
+                        document.body.style.backgroundImage = "url({% static '/imgs/main4.jpg' %})"
+                        localStorage.setItem('bgImg', "url({% static '/imgs/main4.jpg' %})")
+                        break
+                    }
+                    case(4):{
+                        document.body.style.backgroundImage = "url({% static '/imgs/main5.jpg' %})"
+                        localStorage.setItem('bgImg', "url({% static '/imgs/main5.jpg' %})")
+                        break
+                    }
+                }
+            })
+        }
+        motives.forEach(col_change)
+    </script>
+    <script src="{% static '/scripts/settings.js' %}"></script>
+    <script src="{% static '/scripts/click.js' %}"></script>
+<script src="{% static '/scripts/settings.js' %}"></script>
 </html>

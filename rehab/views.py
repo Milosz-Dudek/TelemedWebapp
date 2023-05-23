@@ -13,6 +13,7 @@ from io import BytesIO
 from matplotlib.backends.backend_svg import FigureCanvasSVG
 from matplotlib.figure import Figure
 from scipy.signal import find_peaks
+from django.http import JsonResponse
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm, \
     ExerciseFilterForm, PatientFilterForm, RehabilitatorFilterForm
@@ -201,7 +202,6 @@ def my_account_view(request):
     profile = None
     is_rehabilitator = None
     is_patient = None
-
     if hasattr(user, 'rehabilitator'):
         profile = user.rehabilitator
         is_rehabilitator = True

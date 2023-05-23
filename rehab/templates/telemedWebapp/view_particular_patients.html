@@ -13,7 +13,7 @@
 <body>
 {% block content %}
   <h2>All Patients</h2>
-    <div id="cont">
+    <div class="col-md-3">
           <h3>Filter the fields</h3>
           <form method="GET">
                 {% csrf_token %}
@@ -46,23 +46,25 @@
       </tbody>
     </table>
   {% else %}
-    <p>No patients found.</p>
+    <p class="info">No patients found.</p>
   {% endif %}
 <div class="pagination">
     <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?{% param_replace page=1 %}">&laquo; First</a>
-            <a href="?{% param_replace page=page_obj.previous_page_number  %}">Previous</a>
-        {% endif %}
-
         <span class="current">
             Page {{ page_obj.number }} out of {{ page_obj.paginator.num_pages }}.
         </span>
-
-        {% if page_obj.has_next %}
-            <a href="?{% param_replace page=page_obj.next_page_number  %}">Next</a>
-            <a href="?{% param_replace page=page_obj.paginator.num_pages  %}">Last &raquo;</a>
-        {% endif %}
+        <div id="left">
+            {% if page_obj.has_previous %}
+                <a href="?{% param_replace page=1 %}">&laquo; First</a>
+                <a href="?{% param_replace page=page_obj.previous_page_number  %}">Previous</a>
+            {% endif %}
+        </div>
+        <div id="right">
+            {% if page_obj.has_next %}
+                <a href="?{% param_replace page=page_obj.next_page_number  %}">Next</a>
+                <a href="?{% param_replace page=page_obj.paginator.num_pages  %}">Last &raquo;</a>
+            {% endif %}
+        </div>
     </span>
 </div>
 {% endblock %}
@@ -70,5 +72,7 @@
 <h1></h1>
 <a id="home" href="{% url 'telemedWebapp:home' %}"><p class="bt_txt">Home</p></a>
 </body>
+<script src="{% static '/scripts/click.js' %}"></script>
+<script src="{% static '/scripts/settings.js' %}"></script>
 </html>
 
