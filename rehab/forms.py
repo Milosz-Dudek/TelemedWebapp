@@ -36,11 +36,11 @@ class RehabilitatorRegisterForm(ModelForm):
 
 
 class RehabilitatorFilterForm(forms.Form):
-    name = forms.CharField(label='name', required=False)
-    surname = forms.CharField(label='surname', required=False)
-    expertise = forms.CharField(label='expertise', required=False)
-    location = forms.CharField(label='location', required=False)
-    entity_name = forms.CharField(label='entity_name', required=False)
+    name = forms.CharField(label='Name', required=False)
+    surname = forms.CharField(label='Surname', required=False)
+    expertise = forms.CharField(label='Expertise', required=False)
+    location = forms.CharField(label='Location', required=False)
+    entity_name = forms.CharField(label='Entity name', required=False)
 
 
 class PatientRegisterForm(ModelForm):
@@ -77,13 +77,13 @@ class PatientRegisterForm(ModelForm):
 
 
 class PatientFilterForm(forms.Form):
-    name = forms.CharField(label='name', required=False)
-    surname = forms.CharField(label='surname', required=False)
-    sex = forms.ChoiceField(label='sex', choices=[('', 'Any'), ('M', 'Male'), ('F', 'Female')], required=False)
-    birth_date_from = forms.DateTimeField(label='birth_date_from',
+    name = forms.CharField(label='Name', required=False)
+    surname = forms.CharField(label='Surname', required=False)
+    sex = forms.ChoiceField(label='Sex', choices=[('', 'Any'), ('M', 'Male'), ('F', 'Female')], required=False)
+    birth_date_from = forms.DateTimeField(label='Birth date from',
                                           widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}),
                                           required=False)
-    birth_date_till = forms.DateTimeField(label='birth_date_till',
+    birth_date_till = forms.DateTimeField(label='Birth date till',
                                           widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}),
                                           required=False)
 
@@ -108,15 +108,15 @@ class ExerciseForm(ModelForm):
 
 
 class ExerciseFilterForm(forms.Form):
-    type_of_exercise = forms.ChoiceField(label='type_of_exercise',
+    type_of_exercise = forms.ChoiceField(label='Type of exercise',
                                          choices=(('Sit-ups', 'Sit-ups'), ('Jumping-jacks', 'Jumping-jacks')),
                                          widget=forms.RadioSelect, required=False)
-    date_of_exercise_from = forms.DateTimeField(label="date_of_exercise",
+    date_of_exercise_from = forms.DateTimeField(label="Date (from)",
                                                 widget=forms.DateTimeInput(
                                                     attrs={'class': 'form-control', 'type': 'datetime-local'}),
                                                 required=False
                                                 )
-    date_of_exercise_till = forms.DateTimeField(label="date_of_exercise",
+    date_of_exercise_till = forms.DateTimeField(label="Date (to)",
                                                 widget=forms.DateTimeInput(
                                                     attrs={'class': 'form-control', 'type': 'datetime-local'}),
                                                 required=False

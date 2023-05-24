@@ -1,0 +1,45 @@
+button{
+    border: 2px solid white;
+    border-radius: 40px;
+    width: 224px;
+    height: 40px;
+    display: block;
+    margin: 15px auto 15px auto;
+    color: white;
+    background-color: rgb(134, 194, 50);
+    font-family: Mirza;
+    font-variant: small-caps;
+    font-size: 28px;
+    cursor: pointer;
+    transition: 1s;
+}
+button:hover{
+    border-radius: 0;
+    color: rgb(171, 14, 61);
+}
+a{
+    text-decoration: none;
+    border: 2px solid white;
+    border-radius: 40px;
+    width: 224px;
+    height: 40px;
+    display: block;
+    margin: auto;
+    color: white;
+    background-color: rgb(134, 194, 50);
+    position: relative;
+    transition: 1s;
+    cursor: pointer;
+}
+.bt_txt{
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-variant: small-caps;
+}
+a:hover, .set:hover{
+    border-radius: 0;
+    color: rgb(171, 14, 61);
+}

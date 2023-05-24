@@ -41,7 +41,7 @@
             {% endif %}
             <li><a href="{% url 'telemedWebapp:view_all_rehabilitators' %}"><p class="bt_txt">View all rehabilitators</p></a></li>
             <li><a href="{% url 'telemedWebapp:my_account' %}"><p class="bt_txt">My account</p></a></li>
-            <li><a href="https://kutypix.github.io/games/minesweeper.html" target="_blank"><p class="bt_txt">Minesweeper</p></a></li>
+{#            <li><a href="https://kutypix.github.io/games/minesweeper.html" target="_blank"><p class="bt_txt">Minesweeper</p></a></li>#}
             <li><a href="{% url 'telemedWebapp:logout_user' %}"><p class="bt_txt">Logout</p></a></li>
         {% else %}
             {% if not is_registration_page and not is_login_page %}

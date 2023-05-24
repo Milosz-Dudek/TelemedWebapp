@@ -75,10 +75,6 @@ form{
     text-align: center;
     margin-bottom: 20px;
 }
-input[type='search']{
-    width: 200px;
-    height: 26px;
-}
 button{
     width: 80px;
     border-radius: 30px;
@@ -100,11 +96,8 @@ h3{
     width: 260px;
     margin: auto;
 }
-input[type='text'], input[type='date']{
-    float: right;
-}
-p{
-    text-align: left;
+input[type='text']{
+    float: left;
 }
 .current{
     margin: 10px auto;
@@ -118,17 +111,21 @@ button{
     transition: 1s;
     margin: auto 5px
 }
-input[type='radio']{
-    float: left;
-    overflow: hidden;
+input{
+    float: right;
 }
 label{
+    width: 100%;
     font-size: 20px;
 }
 td a{
     color: aquamarine;
 }
-select{
-    float: right;
+.form-control{
+    display: block;
+    margin: 5px auto;
     width: 150px;
+}
+p{
+    text-align: left;
 }

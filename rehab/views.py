@@ -407,9 +407,10 @@ def exercise_plot(request):
     x = np.array([data['x'] for data in exercise_data.values('x')])
     y = np.array([data['y'] for data in exercise_data.values('y')])
     z = np.array([data['z'] for data in exercise_data.values('z')])
-    x = x[500:-500]
-    y = y[500:-500]
-    z = z[500:-500]
+    if x.shape[0] > 1000 + 200:
+        x = x[500:-500]
+        y = y[500:-500]
+        z = z[500:-500]
 
     time = np.linspace(0, np.max(x) - np.min(x), x.shape[0])
 
