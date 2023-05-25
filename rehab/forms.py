@@ -134,7 +134,6 @@ class ExerciseDataForm(ModelForm):
     def save(self, commit=True, exercise=None):
         csv_file = self.cleaned_data.get('csv_file')
         if csv_file:
-            # process the csv file and save the exercise data
             reader = csv.DictReader(io.StringIO(csv_file.read().decode('utf-8')))
             exercise_data_list = []
             for row in reader:
@@ -146,7 +145,6 @@ class ExerciseDataForm(ModelForm):
                                              x=row['x'])
                 exercise_data_list.append(exercise_data)
 
-            # Use bulk_create to create ExerciseData instances in bulk
             ExerciseData.objects.bulk_create(exercise_data_list)
 
             if commit:

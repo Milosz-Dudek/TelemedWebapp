@@ -13,7 +13,6 @@ from io import BytesIO
 from matplotlib.backends.backend_svg import FigureCanvasSVG
 from matplotlib.figure import Figure
 from scipy.signal import find_peaks
-from django.http import JsonResponse
 
 from .forms import RehabilitatorRegisterForm, LoginForm, PatientRegisterForm, ExerciseForm, ExerciseDataForm, \
     ExerciseFilterForm, PatientFilterForm, RehabilitatorFilterForm
@@ -25,7 +24,6 @@ sns.set_theme()
 def home_view(request):
     user = request.user
     template = 'telemedWebapp/base.html'
-    # Check if user has a Rehabilitator profile
     profile = None
     is_rehabilitator = None
     is_patient = None
@@ -144,7 +142,7 @@ def view_all_rehabilitators(request):
         elif cd['entity_name']:
             rehabilitators = rehabilitators.filter(entity_name=cd['entity_name'])
 
-    paginator = Paginator(rehabilitators, 10)  # 10 items per page
+    paginator = Paginator(rehabilitators, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -154,7 +152,6 @@ def view_all_rehabilitators(request):
                'is_rehabilitator': is_rehabilitator,
                'is_patient': is_patient}
 
-    # Pass the list of Rehabilitators to the template
     return render(request, 'telemedWebapp/view_all_rehabilitators.html', context)
 
 
@@ -167,7 +164,6 @@ def view_particular_patients(request):
     current_rehabilitator = Rehabilitator.objects.get(user=request.user)
     patients = Patient.objects.filter(rehabilitator=current_rehabilitator).order_by('name', 'surname')
 
-    # User submitted the form, process form data and update session variables
     patient_filter_form = PatientFilterForm(request.GET)
     if patient_filter_form.is_valid():
         cd = patient_filter_form.cleaned_data
@@ -180,7 +176,6 @@ def view_particular_patients(request):
         elif cd['birth_date_from'] and cd['birth_date_till']:
             patients = patients.filter(birth_date__range=(cd['birth_date_from'], cd['birth_date_till']))
 
-    # Create the paginator using the filtered queryset
     paginator = Paginator(patients, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
@@ -198,7 +193,6 @@ def view_particular_patients(request):
 def my_account_view(request):
     user = request.user
     template = 'telemedWebapp/my_account.html'
-    # Check if user has a Rehabilitator profile
     profile = None
     is_rehabilitator = None
     is_patient = None
@@ -374,7 +368,7 @@ def view_exercises(request):
             exercises = exercises.filter(
                 date_of_exercise__range=(cd['date_of_exercise_from'], cd['date_of_exercise_till']))
 
-    paginator = Paginator(exercises, 10)  # 10 items per page
+    paginator = Paginator(exercises, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 

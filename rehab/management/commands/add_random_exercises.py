@@ -6,6 +6,7 @@ from django.db import transaction
 from rehab.models import Patient, Exercise, ExerciseData
 
 patients = Patient.objects.all()
+# patients = Patient.objects.filter(name='Miłosz', surname='Dudek')
 
 
 def random_timestamp():
