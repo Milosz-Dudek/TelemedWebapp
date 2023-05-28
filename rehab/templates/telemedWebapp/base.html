@@ -23,11 +23,11 @@
     {% endblock %}
 </div>
 <div id="clock">
-    <div id="hours" class="time">00</div>
+    <div id="hours" class="time"></div>
     <div class="dots">:</div>
-    <div id="minutes" class="time">00</div>
+    <div id="minutes" class="time"></div>
     <div class="dots">:</div>
-    <div id="seconds" class="time">00</div>
+    <div id="seconds" class="time"></div>
 </div>
 <nav>
     <ul>
@@ -64,6 +64,12 @@
 <script src="{% static '/scripts/padding.js' %}"></script>
 <script src="{% static '/scripts/click.js' %}"></script>
 <script src="{% static '/scripts/settings.js' %}"></script>
+<script>
+    let hh = document.getElementById('hours')
+    let mm = document.getElementById('minutes')
+    let ss = document.getElementById('seconds')
+    get_date(hh,mm,ss)
+</script>
 </div>
 </body>
 </html>
